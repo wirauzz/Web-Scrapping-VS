@@ -9,24 +9,16 @@ import utilities
 
 def scrape_correo_del_sur(url, soup):
     print('Scrapping in web {}'.format(url))
-    driver = webdriver.Chrome('C:/Users/fabri/Downloads/chromedriver.exe')
-    driver.implicitly_wait(5)
-    try:
-        driver.get(url)
-        time.sleep(2)
-        driver.execute_script("window.scrollTo(0,document.body.scrollHeight);")
-        content = driver.page_source()
-    except:
-        print('webdriver timeout... ')
-        content = ''
-    data = {}
-    data['type'] = 'article'
-    data['source'] = url
-    data['title'] = utilities.clean_soup(soup.find('h1'))
-    data['text'] = ''
-    for d in soup.find_all('div', class_='content'):
-        for t in d.find_all('p'):
-            data['text'] = data['text'] + utilities.clean_soup(t) + ' '
+
+    for content in soup.find_all('div', class_='cntContent'):
+        data = {}
+        data_content = {}
+        data['source'] = url
+        data['type'] = 'article'
+        for title in content.find('h1'):
+            data['title'] = title
             
-    print(data)
+        for text in content.find_all('div', style='text-align: justify;'):
+            data['text'] = data['text'] + utilities.clean_soup(text) + ' ' 
+           
     return json.dumps(data, ensure_ascii=False)
