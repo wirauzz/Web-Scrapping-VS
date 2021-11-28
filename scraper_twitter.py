@@ -12,7 +12,7 @@ driver = webdriver.Chrome('C:/Users/fabri/Downloads/chromedriver.exe')
 
 ##current_url = 'https://www.facebook.com/groups/8080169598'
 
-current_url = 'https://twitter.com/evoespueblo'
+current_url = 'https://twitter.com/LosTiemposBol'
 driver.maximize_window()
 driver.implicitly_wait(5)
 
