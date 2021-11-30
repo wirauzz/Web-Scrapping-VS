@@ -7,12 +7,13 @@ import utilities
 def scrape_opinion(url, soup):
     print('Scrapping in web {}'.format(url))
     data = {}
-    data['type'] = 'article'
-    data['source'] = url
-    data['title'] = utilities.clean_soup(soup.find('h2', class_='title'))
-    data['text'] = ''
-    print(data)
-    for d in soup.find_all('div', class_='body pais'):
-        for t in d.find_all('p'):
-            data['text'] = data['text'] + utilities.clean_soup(d) + ' '
+    for c in BeautifulSoup(soup, "html.parser").find_all('article'):
+        data['type'] = 'article'
+        data['source'] = url
+        for title in c.find_all('h2'):
+            data['title'] = utilities.clean_soup(title)
+        text_content = c.find('div', class_="body pais")
+        for text in text_content.find_all('p'):
+            data['text'] = data['text'] + utilities.clean_soup(text) + ' '
+            
     return json.dumps(data, ensure_ascii=False)

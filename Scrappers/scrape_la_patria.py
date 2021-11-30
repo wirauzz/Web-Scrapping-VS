@@ -6,11 +6,13 @@ import utilities
 
 def scrape_la_patria(url, soup):
     print('Scrapping in web {}'.format(url))
-    data = {}
-    data['type'] = 'article'
-    data['source'] = url
-    data['title'] = clean_soup(soup.find('h1', class_='text-200'))
-    data['text'] = ''
-    for t in soup.find_all('p', style="margin: 0 auto; padding: 0px 5px 15px 0px;"):
-        data['text'] = data['text'] + utilities.clean_soup(t) + ' '
+    for c in BeautifulSoup(soup, "html.parser").find_all('article'):
+        data = {}
+        data['type'] = 'article'
+        data['source'] = url
+        data['text'] = ''
+        for title in c.find_all('h1'):
+            data['title'] = utilities.clean_soup(title)
+        for text_content in c.find_all('p', attrs={'class': None}):
+            data['text'] = data['text'] + utilities.clean_soup(text_content) + ' '
     return json.dumps(data, ensure_ascii=False)

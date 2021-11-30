@@ -26,19 +26,23 @@ def get_links():
     file.close()
     return links
 
-def scrape_links(current_url, soup):
+def scrape_links(base_url, current_url, soup):
+    print(base_url)
+    print(current_url)
     links = []
     for a in soup.find_all('a'):
         link = ''
         if a.has_attr('href'):
             a['href'] = a['href'].replace('https', 'http')
-            if a['href'].startswith(current_url) > 0:
+            if a['href'].startswith(base_url) > 0:
+                print("asdasd")
                 link = a['href'].replace('\n', '').replace('\r', '').replace('\t', '').strip()
-                # print(link)
+                print("asdasd")
+                print(link)
             elif a['href'].find('http') < 0:
                 link = current_url + '/' + a['href'].lstrip('/').replace('\n', '').replace('\r', '').replace('\t', '').strip()
                 #print(link)
-        if (link not in links) and ('!'+link not in links) and (len(link) > 0) and (link.find('#') < 0) and (link.find('reply') < 0) and (link.find('png') < 0) and (link.find('jpg') < 0) and (link.find('pdf') < 0) and (link.find('zip') < 0) and (link.find('oh') < 0) and (link.find('necrologicos') < 0):
+        if (link not in links) and ('!'+link not in links) and (len(link) > 0) and (link.find('reply') < 0) and (link.find('png') < 0) and (link.find('jpg') < 0) and (link.find('pdf') < 0) and (link.find('zip') < 0) and (link.find('oh') < 0) and (link.find('necrologicos') < 0):
             links.append(link)
     print("links obtained from {:}".format(current_url))
     print(links)
@@ -81,18 +85,20 @@ def download(base_url, current_url, cycles):
     file.close()
 
     #ABRE EL ARCHIVO DE LINKS QUE SE ENCUENTRA EN DATA#
-    try:
-        file = open('Data\\web-urls\\' + urlsplit(current_url).netloc + '_links.txt', 'r', encoding='utf-8')
-        links = file.read().splitlines()
-        file.close()
-    except:
-        links = []
-
+    # try:
+      
+    # except:
+    #     links = []
+    print("Abriendo archivo")
+    file = open('Data\\web-urls\\' + urlsplit(current_url).netloc + '_links.txt', 'r', encoding='utf-8')
+    links = file.read().splitlines()
+    file.close()
+    print(type(links))
     already = len(links)
     print('{:} links already listed...'.format(already))
 
 
-    scrape_links(current_url ,soup)
+    scrape_links(base_url, current_url ,soup)
 
     #SE OBSERVAN LOS LINKS QUE SE VISITARON#
     visited = 0
@@ -136,14 +142,10 @@ def download(base_url, current_url, cycles):
 
 web_pages = []
 web_pages = get_links()
-
-
-for w in web_pages:
-    # resp = requests.get(w)
-    # content = resp.text
-    # soup = BeautifulSoup(content, "html.parser")
-    # scrape_links(w,soup)    
-    download(w,w, 10)
+link = 1
+download(web_pages[link],web_pages[link],10)
+# for w in web_pages:
+#     download(w,w, 10)
 
 
 

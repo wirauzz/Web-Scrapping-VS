@@ -6,8 +6,8 @@ import utilities
 
 def scrape_el_deber(url, soup):
     print('Scrapping in web {}'.format(url))
+    data = {}
     for content in soup.find_all('div', class_='scroller-holder'):
-        data = {}
         data['type'] = 'article'
         data['source'] = url
         for title in content.find('h1'):
@@ -15,6 +15,4 @@ def scrape_el_deber(url, soup):
             
         for text in content.find_all('p'):
             data['text'] = data['text'] + utilities.clean_soup(text) + ' '        
-    
-
     return json.dumps(data, ensure_ascii=False)
