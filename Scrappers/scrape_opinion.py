@@ -1,4 +1,3 @@
-import requests
 import json
 from bs4 import BeautifulSoup
 import utilities
@@ -15,6 +14,5 @@ def scrape_opinion(url, soup):
         text_content = c.find('div', class_="body")
         if(text_content):
             for text in text_content.find_all('p'):
-                data['text'] = data['text'] + utilities.clean_soup(text) + ' '
-            
+                data['text'] = data['text'] + utilities.clean_soup(text) + ' '    
     return json.dumps(data, ensure_ascii=False)

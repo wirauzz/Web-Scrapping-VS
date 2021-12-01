@@ -1,4 +1,3 @@
-import requests
 import json
 from bs4 import BeautifulSoup
 import utilities
@@ -17,7 +16,7 @@ def scrape_el_potosi(url, soup):
         if(not(article)):
             for text_content in article.find_all('p'):
                 if(str(text_content).find('..........') > 0):
-                    break
+                    return json.dumps(data, ensure_ascii=False)
                 data['text'] = data['text'] + utilities.clean_soup(text_content) + ' '
     return json.dumps(data, ensure_ascii=False)
 

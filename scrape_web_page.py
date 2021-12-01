@@ -36,14 +36,14 @@ def scrape_links(base_url, current_url, soup):
             a['href'] = a['href'].replace('https', 'http')
             if a['href'].startswith(base_url) > 0:
                 link = a['href'].replace('\n', '').replace('\r', '').replace('\t', '').strip()
-                print(link)
+                #print(link)
             elif a['href'].find('http') < 0:
                 link = current_url + '/' + a['href'].lstrip('/').replace('\n', '').replace('\r', '').replace('\t', '').strip()
                 #print(link)
         if (link not in links) and ('!'+link not in links) and (len(link) > 0) and (link.find('reply') < 0) and (link.find('estadostocas') < 0) and (link.find('png') < 0) and (link.find('jpg') < 0) and (link.find('pdf') < 0) and (link.find('zip') < 0) and (link.find('oh') < 0) and (link.find('necrologicos') < 0) and  (link.find('videos') < 0):
             links.append(link)
-    print("links obtained from {:}".format(current_url))
-    print(links)
+    # print("links obtained from {:}".format(current_url))
+    # print(links)
     return links
 
 # getlinks -> busco nuevos links -> 
@@ -79,13 +79,15 @@ def download(base_url, current_url, cycles):
     #  Write results    
     file = open('Data\\web-data\\' + urlsplit(base_url).netloc + '_data.json', 'a', encoding='utf-8-sig')
     print('{} items added...'.format(len(res)))
-    for r in res:  file.write(r + '\n')
+    for r in res: 
+        if(len(r) != 0):
+            file.write(r + ',' + '\n')
     file.close()
 
     #ABRE EL ARCHIVO DE LINKS QUE SE ENCUENTRA EN DATA#
     try:
         print("Abriendo archivo")
-        file = open('Data\\web-urls\\' + urlsplit(current_url).netloc + '_links.txt', 'r', encoding='utf-8')
+        file = open('Data\\web-urls\\' + urlsplit(base_url).netloc + '_links.txt', 'r', encoding='utf-8')
         links = file.read().splitlines()
         file.close()
     except:
@@ -95,12 +97,12 @@ def download(base_url, current_url, cycles):
     print('{:} links already listed...'.format(already))
 
 
-    links = scrape_links(base_url, current_url ,soup)
+    links = links + scrape_links(base_url, current_url ,soup)
 
     #SE OBSERVAN LOS LINKS QUE SE VISITARON#
     visited = 0
     for l in links:
-        if l.startswith('!'):
+        if l.find('!') == 0:
             visited += 1
     print('{:} new links detected...'.format(len(links)-already))
     print('{:} links in total and {:} visited...'.format(len(links), visited))
@@ -137,10 +139,9 @@ def download(base_url, current_url, cycles):
 
 web_pages = []
 web_pages = get_links()
-link = 8
-download(web_pages[link],web_pages[link],10)
-# for w in web_pages:
-#     download(w,w, 10)
+
+for w in web_pages:
+    download(w,w, 200)
 
 
 
