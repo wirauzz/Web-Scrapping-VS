@@ -35,14 +35,12 @@ def scrape_links(base_url, current_url, soup):
         if a.has_attr('href'):
             a['href'] = a['href'].replace('https', 'http')
             if a['href'].startswith(base_url) > 0:
-                print("asdasd")
                 link = a['href'].replace('\n', '').replace('\r', '').replace('\t', '').strip()
-                print("asdasd")
                 print(link)
             elif a['href'].find('http') < 0:
                 link = current_url + '/' + a['href'].lstrip('/').replace('\n', '').replace('\r', '').replace('\t', '').strip()
                 #print(link)
-        if (link not in links) and ('!'+link not in links) and (len(link) > 0) and (link.find('reply') < 0) and (link.find('png') < 0) and (link.find('jpg') < 0) and (link.find('pdf') < 0) and (link.find('zip') < 0) and (link.find('oh') < 0) and (link.find('necrologicos') < 0):
+        if (link not in links) and ('!'+link not in links) and (len(link) > 0) and (link.find('reply') < 0) and (link.find('estadostocas') < 0) and (link.find('png') < 0) and (link.find('jpg') < 0) and (link.find('pdf') < 0) and (link.find('zip') < 0) and (link.find('oh') < 0) and (link.find('necrologicos') < 0) and  (link.find('videos') < 0):
             links.append(link)
     print("links obtained from {:}".format(current_url))
     print(links)
@@ -72,33 +70,32 @@ def download(base_url, current_url, cycles):
 
     if current_url.find('lapalabradelbeni.com.bo') > 0: res.append(scrape_la_palabra_del_beni(current_url, soup))
 
-    if current_url.find('impresa.lapatria.bo') > 0: res.append(scrape_la_patria(current_url, soup))
+    if current_url.find('lapatria.bo') > 0: res.append(scrape_la_patria(current_url, soup))
 
     if current_url.find('www.lostiempos.com') > 0: res.append(scrape_los_tiempos(current_url, soup))
 
     if current_url.find('opinion.com.bo') > 0: res.append(scrape_opinion(current_url, soup))
 
-
+    #  Write results    
     file = open('Data\\web-data\\' + urlsplit(base_url).netloc + '_data.json', 'a', encoding='utf-8-sig')
     print('{} items added...'.format(len(res)))
     for r in res:  file.write(r + '\n')
     file.close()
 
     #ABRE EL ARCHIVO DE LINKS QUE SE ENCUENTRA EN DATA#
-    # try:
-      
-    # except:
-    #     links = []
-    print("Abriendo archivo")
-    file = open('Data\\web-urls\\' + urlsplit(current_url).netloc + '_links.txt', 'r', encoding='utf-8')
-    links = file.read().splitlines()
-    file.close()
-    print(type(links))
+    try:
+        print("Abriendo archivo")
+        file = open('Data\\web-urls\\' + urlsplit(current_url).netloc + '_links.txt', 'r', encoding='utf-8')
+        links = file.read().splitlines()
+        file.close()
+    except:
+        links = []
+    
     already = len(links)
     print('{:} links already listed...'.format(already))
 
 
-    scrape_links(base_url, current_url ,soup)
+    links = scrape_links(base_url, current_url ,soup)
 
     #SE OBSERVAN LOS LINKS QUE SE VISITARON#
     visited = 0
@@ -111,11 +108,9 @@ def download(base_url, current_url, cycles):
     if visited / (len(links)+1) > 0.8 or len(links) < 10:
         print('Most of the site has been scraped. Terminating...')
         sys.exit()
-    #SE ESCRIBEN LOS NUEVOS LINKS EN EL ARCHVIO CORRESPONDIENTE#
-    with open('Data\\web-urls\\' + urlsplit(current_url).netloc + '_links.txt', 'w', encoding='utf-8') as file:
-        for link in links:  file.write(link + '\n')
-    file.close()
-
+        
+    
+  
     if cycles > 0:      
         destination = base_url
         while len(links) > 0:
@@ -129,7 +124,7 @@ def download(base_url, current_url, cycles):
                 print("Selected an already visited link. Retrying...")
         print('Going to {}\n'.format(destination[:min(100, len(destination))]))
 
-    # Update link list
+    # #SE ESCRIBEN LOS NUEVOS LINKS EN EL ARCHVIO CORRESPONDIENTE#
     with open('Data\\web-urls\\' + urlsplit(base_url).netloc + '_links.txt', 'w', encoding='utf-8') as file:
         for link in links:  file.write(link + '\n')
 
@@ -142,7 +137,7 @@ def download(base_url, current_url, cycles):
 
 web_pages = []
 web_pages = get_links()
-link = 1
+link = 8
 download(web_pages[link],web_pages[link],10)
 # for w in web_pages:
 #     download(w,w, 10)

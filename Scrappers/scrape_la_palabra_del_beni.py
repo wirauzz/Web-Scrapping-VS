@@ -6,7 +6,7 @@ import utilities
 
 def scrape_la_palabra_del_beni(url, soup):
     print('Scrapping in web {}'.format(url))
-    for c in BeautifulSoup(soup, "html.parser").find_all('div', class_='elementor-widget-wrap'):
+    for c in soup.find_all('div', class_='elementor-widget-wrap'):
         data = {}
         data['type'] = 'article'
         data['source'] = url

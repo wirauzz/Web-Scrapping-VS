@@ -7,13 +7,13 @@ import utilities
 def scrape_noticias_fides(url, soup):
     print('Scrapping in web {}'.format(url))
     data = {}
-    for c in BeautifulSoup(soup, "html.parser").find_all('section', attrs={'class': None}):
+    for c in soup.find_all('div', class_='cntContent'):
         data['type'] = 'article'
         data['source'] = url
+        data['text'] = ' '
         for title in c.find_all('h1'):
             data['title'] = utilities.clean_soup(title)
         
-        text_content = c.find('span', {"id": "contentN"})
-        for text in text_content.find_all('p'):
+        for text in c.find_all('div', style="text-align: justify;"):
             data['text'] = data['text'] + utilities.clean_soup(text) + ' '
     return json.dumps(data, ensure_ascii=False)
