@@ -13,7 +13,7 @@ def scrape_el_potosi(url, soup):
         for title in c.find_all('h1'):
             data['title'] = utilities.clean_soup(title)
         article = c.find('div', class_='content')
-        if(not(article)):
+        if(article):
             for text_content in article.find_all('p'):
                 if(str(text_content).find('..........') > 0):
                     return json.dumps(data, ensure_ascii=False)

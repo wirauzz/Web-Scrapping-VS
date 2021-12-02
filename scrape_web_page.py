@@ -141,7 +141,7 @@ web_pages = []
 web_pages = get_links()
 
 for w in web_pages:
-    download(w,w, 200)
+    download(w,w, 10)
 
 
 

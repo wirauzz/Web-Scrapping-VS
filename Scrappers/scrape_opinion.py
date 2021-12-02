@@ -9,6 +9,7 @@ def scrape_opinion(url, soup):
     for c in soup.find_all('div', class_='inner-content col-md-8 col-sm-7 col-ms-12 col-xs-12'):
         data['type'] = 'article'
         data['source'] = url
+        data['text'] = ' '
         for title in c.find_all('h2'):
             data['title'] = utilities.clean_soup(title)
         text_content = c.find('div', class_="body")
